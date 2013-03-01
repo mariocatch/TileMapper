@@ -1,0 +1,15 @@
+D:\dev\c#\TileMapper\TileMapper\bin\Debug\TileMapper.exe.config
+D:\dev\c#\TileMapper\TileMapper\bin\Debug\TileMapper.exe
+D:\dev\c#\TileMapper\TileMapper\bin\Debug\TileMapper.pdb
+D:\dev\c#\TileMapper\TileMapper\obj\Debug\TileMapper.csprojResolveAssemblyReference.cache
+D:\dev\c#\TileMapper\TileMapper\obj\Debug\MainWindow.baml
+D:\dev\c#\TileMapper\TileMapper\obj\Debug\MainWindow.g.cs
+D:\dev\c#\TileMapper\TileMapper\obj\Debug\App.g.cs
+D:\dev\c#\TileMapper\TileMapper\obj\Debug\TileMapper_MarkupCompile.cache
+D:\dev\c#\TileMapper\TileMapper\obj\Debug\TileMapper.g.resources
+D:\dev\c#\TileMapper\TileMapper\obj\Debug\TileMapper.Properties.Resources.resources
+D:\dev\c#\TileMapper\TileMapper\obj\Debug\TileMapper.csproj.GenerateResource.Cache
+D:\dev\c#\TileMapper\TileMapper\obj\Debug\TileMapper.exe
+D:\dev\c#\TileMapper\TileMapper\obj\Debug\TileMapper.pdb
+D:\dev\c#\TileMapper\TileMapper\obj\Debug\TileMapper_MarkupCompile.lref
+D:\dev\c#\TileMapper\TileMapper\obj\Debug\GeneratedInternalTypeHelper.g.cs
