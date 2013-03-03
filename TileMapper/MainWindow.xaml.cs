@@ -30,7 +30,7 @@ namespace TileMapper
             InitializeComponent();
             mPlacedTiles = new ObservableCollection<Tile>();
             mAvailableTiles = new ObservableCollection<Tile>();
-            SelectedColumnDimensions = SelectedRowDimensions = 48;
+            SelectedDimensions = 48;
             Scale = 32;
             DataContext = this;
         }
@@ -70,65 +70,33 @@ namespace TileMapper
         }
 
         /// <summary>
-        /// Gets or sets the selected column dimensions.
+        /// Gets or sets the selected dimensoins
         /// </summary>
-        public int SelectedColumnDimensions
+        public int SelectedDimensions
         {
-            get { return mSelectedColumnDimensions; }
+            get { return mSelectedDimensions; }
             set
             {
-                if (mSelectedColumnDimensions != value)
+                if (mSelectedDimensions != value)
                 {
-                    mSelectedColumnDimensions = value;
-                    RaisePropertyChanged("SelectedColumnDimensions");
+                    mSelectedDimensions = value;
+                    RaisePropertyChanged("SelectedDimensions");
                 }
             }
         }
 
         /// <summary>
-        /// Gets or sets the selected row dimensions.
+        /// Gets or sets the set dimensions.
         /// </summary>
-        public int SelectedRowDimensions
+        public int SetDimensions
         {
-            get { return mSelectedRowDimensions; }
+            get { return mSetDimensions; }
             set
             {
-                if (mSelectedRowDimensions != value)
+                if (mSetDimensions != value)
                 {
-                    mSelectedRowDimensions = value;
-                    RaisePropertyChanged("SelectedRowDimensions");
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the set column dimensions.
-        /// </summary>
-        public int SetColumnDimensions
-        {
-            get { return mSetColumnDimensions; }
-            set
-            {
-                if (mSetColumnDimensions != value)
-                {
-                    mSetColumnDimensions = value;
-                    RaisePropertyChanged("SetColumnDimensions");
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the set row dimensions.
-        /// </summary>
-        public int SetRowDimensions
-        {
-            get { return mSetRowDimensions; }
-            set
-            {
-                if (mSetRowDimensions != value)
-                {
-                    mSetRowDimensions = value;
-                    RaisePropertyChanged("SetRowDimensions");
+                    mSetDimensions = value;
+                    RaisePropertyChanged("SetDimensions");
                 }
             }
         }
@@ -243,8 +211,7 @@ namespace TileMapper
         private void ApplySettings()
         {
             mPlacedTiles.Clear();
-            SetColumnDimensions = SelectedColumnDimensions;
-            SetRowDimensions = SelectedRowDimensions;
+            SetDimensions = SelectedDimensions;
             DrawBoard();
         }
 
@@ -254,8 +221,7 @@ namespace TileMapper
         private void SaveTileMap()
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendFormat("Rows={0}{1}", SetRowDimensions, Environment.NewLine);
-            sb.AppendFormat("Columns={0}{1}", SetColumnDimensions, Environment.NewLine);
+            sb.AppendFormat("Dimensions={0}{1}", SetDimensions, Environment.NewLine);
             sb.Append("Grid=");
             foreach (var tile in mPlacedTiles)
             {
@@ -272,7 +238,10 @@ namespace TileMapper
             var result = sfd.ShowDialog(this);
             if (result == true)
             {
-                // TODO: Save file.
+                using (StreamWriter sw = new StreamWriter(sfd.FileName, false, Encoding.ASCII))
+                {
+                    sw.Write(sb.ToString());
+                }
             }
         }
 
@@ -281,9 +250,9 @@ namespace TileMapper
         /// </summary>
         private void DrawBoard()
         {
-            for (int i = 0; i < SetRowDimensions; i++)
+            for (int i = 0; i < SetDimensions; i++)
             {
-                for (int j = 0; j < SetColumnDimensions; j++)
+                for (int j = 0; j < SetDimensions; j++)
                 {
                     PlacedTiles.Add(new Tile() { TileType = "0" });
                 }
@@ -392,10 +361,8 @@ namespace TileMapper
         private bool mIsInEraseMode;
         private int mScale;
         private string mSpriteSheetPath;
-        private int mSetColumnDimensions;
-        private int mSetRowDimensions;
-        private int mSelectedColumnDimensions;
-        private int mSelectedRowDimensions;
+        private int mSetDimensions;
+        private int mSelectedDimensions;
         private RelayCommand mApplySettingsCommand;
         private RelayCommand mSaveAsCommand;
         private RelayCommand mLoadSpriteSheetCommand;

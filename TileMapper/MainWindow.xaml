@@ -57,17 +57,9 @@
                     </TabItem>
                     <TabItem Header="Settings">
                         <DockPanel LastChildFill="False">
-                            <DockPanel LastChildFill="False" DockPanel.Dock="Top">
-                                <Label Content="Dimensions:"/>
-                                <ComboBox Width="50" ItemsSource="{Binding AvailableDimensionNumbers}" SelectedItem="{Binding SelectedColumnDimensions}"/>
-                                <Label Content=" By "/>
-                                <ComboBox Width="50" ItemsSource="{Binding AvailableDimensionNumbers}" SelectedItem="{Binding SelectedRowDimensions}"/>
-                                <Label DockPanel.Dock="Right">
-                                    <Label.ToolTip>
-                                        <ToolTip Content="Column X Row"/>
-                                    </Label.ToolTip>
-                                    <Hyperlink>?</Hyperlink>
-                                </Label>
+                            <DockPanel LastChildFill="True" DockPanel.Dock="Top">
+                                <Label Content="Dimensions (col x row):"/>
+                                <ComboBox ItemsSource="{Binding AvailableDimensionNumbers}" SelectedItem="{Binding SelectedDimensions}"/>
                             </DockPanel>
                             <Button DockPanel.Dock="Bottom" Content="Apply" Height="40" FontSize="15"
                                     Command="{Binding ApplySettingsCommand}"/>
@@ -104,10 +96,13 @@
                         <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="Transparent" />
                         <DataTemplate DataType="{x:Type tileMapper:Tile}">
                             <Border BorderBrush="White" BorderThickness="0.2px">
-                                <Image Source="{Binding CroppedBitmapImage, Mode=OneWay}" 
-                                            Width="{Binding Path=DataContext.Scale, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" 
-                                            Height="{Binding Path=DataContext.Scale, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" 
-                                            Margin="0"/>
+                                <Grid>
+                                    <Image Source="{Binding CroppedBitmapImage, Mode=OneWay}" 
+                                                Width="{Binding Path=DataContext.Scale, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" 
+                                                Height="{Binding Path=DataContext.Scale, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" 
+                                                Margin="0"/>
+                                    <Label Content="{Binding TileType}"/>
+                                </Grid>
                             </Border>
                         </DataTemplate>
                     </ListBox.Resources>
@@ -118,7 +113,7 @@
                     </ListBox.ItemsPanel>
                 </ListBox>
                 <Label Foreground="WhiteSmoke" FontSize="50" Opacity="0.1" Content="...E r a s e      M o d e      E n a b l e d..."
-                       VerticalAlignment="Center" HorizontalAlignment="Center"
+                       VerticalAlignment="Center" HorizontalAlignment="Center" IsHitTestVisible="False"
                        Visibility="{Binding IsInEraseMode, Converter={StaticResource ResourceKey=BoolToVisConverter}}"/>
             </Grid>
         </DockPanel>
