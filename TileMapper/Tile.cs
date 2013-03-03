@@ -1,26 +1,81 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
+using System.Windows.Media.Imaging;
 
 namespace TileMapper
 {
-    public class Tile
+    public class Tile : INotifyPropertyChanged
     {
-        public Tile()
+        public int Height
         {
-            Pixels = new List<Pixel>();
+            get { return mHeight; }
+            set
+            {
+                if (mHeight != value)
+                {
+                    mHeight = value;
+                    RaisePropertyChanged("Height");
+                }
+            }
         }
 
-        public string TileType { get; set; }
-        public int Width { get; set; }
-        public int Height { get; set; }
-        public List<Pixel> Pixels { get; set; }
-        public System.Windows.Media.Imaging.CroppedBitmap CroppedBitmapImage { get; set; }
-    }
+        public int Width
+        {
+            get { return mWidth; }
+            set
+            {
+                if (mWidth != value)
+                {
+                    mWidth = value;
+                    RaisePropertyChanged("Width");
+                }
+            }
+        }
 
-    public class Pixel
-    {
-        public int X { get; set; }
-        public int Y { get; set; }
-        public Color Color { get; set; }
+        public string TileType
+        {
+            get { return mTileType; }
+            set
+            {
+                if (mTileType != value)
+                {
+                    mTileType = value;
+                    RaisePropertyChanged("TileType");
+                }
+            }
+        }
+
+        public CroppedBitmap CroppedBitmapImage
+        {
+            get { return mCroppedBitmapImage; }
+            set
+            {
+                if (mCroppedBitmapImage != value)
+                {
+                    mCroppedBitmapImage = value;
+                    RaisePropertyChanged("CroppedBitmapImage");
+                }
+            }
+        }
+
+        private int mHeight;
+        private int mWidth;
+        private string mTileType;
+        private CroppedBitmap mCroppedBitmapImage;
+
+        #region Property Changed
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void RaisePropertyChanged(string propertyName)
+        {
+            var handler = PropertyChanged;
+            if (handler != null)
+            {
+                handler(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+
+        #endregion
     }
 }

@@ -28,9 +28,9 @@ namespace TileMapper
         public MainWindow()
         {
             InitializeComponent();
-            mTiles = new ObservableCollection<Tile>();
+            mPlacedTiles = new ObservableCollection<Tile>();
             mAvailableTiles = new ObservableCollection<Tile>();
-            SelectedColumnDimensions = SelectedRowDimensions = 24;
+            SelectedColumnDimensions = SelectedRowDimensions = 48;
             Scale = 32;
             DataContext = this;
         }
@@ -134,17 +134,49 @@ namespace TileMapper
         }
 
         /// <summary>
-        /// Gets or sets the selected tile.
+        /// Gets or sets the selected available tile.
         /// </summary>
-        public Tile SelectedTile
+        public Tile SelectedAvailableTile
         {
-            get { return mSelectedTile; }
+            get { return mSelectedAvailableTile; }
             set
             {
-                if (mSelectedTile != value)
+                if (mSelectedAvailableTile != value)
                 {
-                    mSelectedTile = value;
-                    RaisePropertyChanged("SelectedTile");
+                    mSelectedAvailableTile = value;
+                    RaisePropertyChanged("SelectedAvailableTile");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the selected placed tile.
+        /// </summary>
+        public Tile SelectedPlacedTile
+        {
+            get { return mSelectedPlacedTile; }
+            set
+            {
+                if (mSelectedPlacedTile != value)
+                {
+                    mSelectedPlacedTile = value;
+                    RaisePropertyChanged("SelectedPlacedTile");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets whether or not we're in erase mode.
+        /// </summary>
+        public bool IsInEraseMode
+        {
+            get { return mIsInEraseMode; }
+            set
+            {
+                if (mIsInEraseMode != value)
+                {
+                    mIsInEraseMode = value;
+                    RaisePropertyChanged("IsInEraseMode");
                 }
             }
         }
@@ -188,12 +220,12 @@ namespace TileMapper
         #endregion
 
         /// <summary>
-        /// Gets the tiles in the grid.
+        /// Gets the placed tiles in the grid.
         /// </summary>
-        public ObservableCollection<Tile> Tiles
+        public ObservableCollection<Tile> PlacedTiles
         {
-            get { return mTiles; }
-            private set { mTiles = value; }
+            get { return mPlacedTiles; }
+            private set { mPlacedTiles = value; }
         }
 
         /// <summary>
@@ -210,7 +242,7 @@ namespace TileMapper
         /// </summary>
         private void ApplySettings()
         {
-            mTiles.Clear();
+            mPlacedTiles.Clear();
             SetColumnDimensions = SelectedColumnDimensions;
             SetRowDimensions = SelectedRowDimensions;
             DrawBoard();
@@ -225,7 +257,7 @@ namespace TileMapper
             sb.AppendFormat("Rows={0}{1}", SetRowDimensions, Environment.NewLine);
             sb.AppendFormat("Columns={0}{1}", SetColumnDimensions, Environment.NewLine);
             sb.Append("Grid=");
-            foreach (var tile in mTiles)
+            foreach (var tile in mPlacedTiles)
             {
                 sb.AppendFormat("{0},", tile.TileType);
             }
@@ -253,7 +285,7 @@ namespace TileMapper
             {
                 for (int j = 0; j < SetColumnDimensions; j++)
                 {
-                    Tiles.Add(new Tile() { TileType = "0" });
+                    PlacedTiles.Add(new Tile() { TileType = "0" });
                 }
             }
         }
@@ -327,10 +359,37 @@ namespace TileMapper
             }
         }
 
-        private ObservableCollection<Tile> mTiles;
-        private ObservableCollection<Tile> mAvailableTiles;
-        private Tile mSelectedTile;
+        private void PlacedTile_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (IsInEraseMode)
+            {
+                SelectedPlacedTile.Height = 0;
+                SelectedPlacedTile.Width = 0;
+                SelectedPlacedTile.TileType = "0";
+                SelectedPlacedTile.CroppedBitmapImage = null;
+            }
+            else if (SelectedAvailableTile != null && SelectedPlacedTile != null)
+            {
+                SelectedPlacedTile.Height = SelectedAvailableTile.Height;
+                SelectedPlacedTile.Width = SelectedAvailableTile.Width;
+                SelectedPlacedTile.TileType = SelectedAvailableTile.TileType;
+                SelectedPlacedTile.CroppedBitmapImage = SelectedAvailableTile.CroppedBitmapImage;
+            }
+        }
 
+        private void Window_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.OemTilde)
+            {
+                IsInEraseMode = !IsInEraseMode;
+            }
+        }
+
+        private ObservableCollection<Tile> mPlacedTiles;
+        private ObservableCollection<Tile> mAvailableTiles;
+        private Tile mSelectedAvailableTile;
+        private Tile mSelectedPlacedTile;
+        private bool mIsInEraseMode;
         private int mScale;
         private string mSpriteSheetPath;
         private int mSetColumnDimensions;

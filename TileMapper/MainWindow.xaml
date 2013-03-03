@@ -3,10 +3,11 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:tileMapper="clr-namespace:TileMapper"
         Title="MainWindow" Height="600" Width="1000"
-        WindowState="Maximized">
+        WindowState="Maximized" KeyUp="Window_KeyUp">
     
     <Window.Resources>
         <tileMapper:Tile x:Key="tile"/>
+        <BooleanToVisibilityConverter x:Key="BoolToVisConverter"/>
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -36,11 +37,11 @@
                             </DockPanel>
 
                             <!--Tiles-->
-                            <ListBox ItemsSource="{Binding AvailableTiles}" SelectedItem="{Binding SelectedTile, Mode=TwoWay}" DockPanel.Dock="Top"
+                            <ListBox ItemsSource="{Binding AvailableTiles}" SelectedItem="{Binding SelectedAvailableTile, Mode=TwoWay}" DockPanel.Dock="Top"
                                      ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                                 <ListBox.ItemTemplate>
                                     <DataTemplate DataType="{x:Type tileMapper:Tile}">
-                                        <Image Source="{Binding CroppedBitmapImage, Mode=OneWay}" 
+                                        <Image Source="{Binding CroppedBitmapImage}" 
                                                Width="{Binding Path=DataContext.Scale, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" 
                                                Height="{Binding Path=DataContext.Scale, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" 
                                                Margin="0"/>
@@ -86,26 +87,40 @@
                             Command="{Binding SaveAsCommand}"/>
                 </DockPanel>
             </Border>
-            <Border BorderBrush="CornflowerBlue" BorderThickness="1" CornerRadius="10" Margin="5">
-                <ItemsControl ItemsSource="{Binding Tiles}" Margin="5">
-                    <ItemsControl.Resources>
+            <Grid>
+                <ListBox ItemsSource="{Binding PlacedTiles}" Margin="5" BorderThickness="0"
+                        SelectionMode="Single" SelectedItem="{Binding SelectedPlacedTile, Mode=TwoWay}" SelectionChanged="PlacedTile_SelectionChanged"
+                        ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                    <ListBox.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                            <GradientStop Color="#5C5C5C" Offset="0.0"/>
+                            <GradientStop Color="#383838" Offset="0.5"/>
+                            <GradientStop Color="#5C5C5C" Offset="1.0"/>
+                        </LinearGradientBrush>
+                    </ListBox.Background>
+                    <ListBox.Resources>
+                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Transparent" />
+                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="Black" />
+                        <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="Transparent" />
                         <DataTemplate DataType="{x:Type tileMapper:Tile}">
-                            <Grid>
-                                <Border BorderBrush="DarkRed" BorderThickness="0.5">
-                                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" 
-                                               Text="{Binding TileType}"/>
-                                </Border>
-                            </Grid>
+                            <Border BorderBrush="White" BorderThickness="0.2px">
+                                <Image Source="{Binding CroppedBitmapImage, Mode=OneWay}" 
+                                            Width="{Binding Path=DataContext.Scale, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" 
+                                            Height="{Binding Path=DataContext.Scale, RelativeSource={RelativeSource AncestorType={x:Type Window}}}" 
+                                            Margin="0"/>
+                            </Border>
                         </DataTemplate>
-                    </ItemsControl.Resources>
-                    <ItemsControl.ItemsPanel>
+                    </ListBox.Resources>
+                    <ListBox.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <UniformGrid Columns="{Binding SetColumnDimensions}" 
-                                         Rows="{Binding SetRowDimensions }"/>
+                            <UniformGrid />
                         </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                </ItemsControl>
-            </Border>
+                    </ListBox.ItemsPanel>
+                </ListBox>
+                <Label Foreground="WhiteSmoke" FontSize="50" Opacity="0.1" Content="...E r a s e      M o d e      E n a b l e d..."
+                       VerticalAlignment="Center" HorizontalAlignment="Center"
+                       Visibility="{Binding IsInEraseMode, Converter={StaticResource ResourceKey=BoolToVisConverter}}"/>
+            </Grid>
         </DockPanel>
         
         
